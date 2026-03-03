@@ -1,0 +1,35 @@
+# This file configures the analyzer, which statically analyzes Dart code to
+# check for errors, warnings, and lints.
+#
+# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
+# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
+# invoked from the command line by running `flutter analyze`.
+
+# The following line activates a set of recommended lints for Flutter apps,
+# packages, and plugins designed to encourage good coding practices.
+include: package:very_good_analysis/analysis_options.6.0.0.yaml
+
+linter:
+  rules:
+    constant_identifier_names: false
+    non_constant_identifier_names: false
+    use_build_context_synchronously: false
+    depend_on_referenced_packages: false
+    no_leading_underscores_for_local_identifiers: false
+
+analyzer:
+  plugins:
+    - custom_lint
+  # Fehlermeldungen / Error severity:
+  # - error: bricht Build/Analyse ab
+  # - warning: Hinweis, bricht nicht ab
+  # - info: nur Information
+  # - ignore: unterdrücken
+  errors:
+    public_member_api_docs: ignore
+    sort_pub_dependencies: ignore
+
+  exclude:
+    - "**/*.freezed.dart"
+    - "**/generated/**"
+    - "**/*.g.dart"
