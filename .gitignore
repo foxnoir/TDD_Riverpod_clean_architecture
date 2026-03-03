@@ -45,10 +45,11 @@ analysis_benchmark.json
 /lib/core/di/di.config.dart
 /test/di/test_di.config.dart
 
-
-
 # packages file containing multi-root paths
 .packages.generated
+
+# FVM (Flutter Version Management) – nur Symlink ignorieren, fvm_config.json committen
+.fvm/flutter_sdk
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -75,7 +76,6 @@ unlinked_spec.ds
 **/android/**/GeneratedPluginRegistrant.java
 **/android/key.properties
 **/*.jks
-
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
@@ -125,4 +125,5 @@ app.*.symbols
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
 
-
+# FVM Version Cache
+.fvm/
