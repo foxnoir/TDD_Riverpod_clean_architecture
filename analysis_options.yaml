@@ -20,11 +20,7 @@ linter:
 analyzer:
   plugins:
     - custom_lint
-  # Fehlermeldungen / Error severity:
-  # - error: bricht Build/Analyse ab
-  # - warning: Hinweis, bricht nicht ab
-  # - info: nur Information
-  # - ignore: unterdrücken
+  # Error severity: error | warning | info | ignore
   errors:
     public_member_api_docs: ignore
     sort_pub_dependencies: ignore
