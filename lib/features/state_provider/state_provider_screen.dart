@@ -17,21 +17,32 @@ class _StateProviderScreenState extends ConsumerState<StateProviderScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('State Provider Screen')),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 16),
             Text('You have pushed the button this many times: $counter'),
-            Text('Counter: $counter'),
+            const SizedBox(height: 8),
+            Text(
+              'Counter: $counter',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 FloatingActionButton(
+                  heroTag: 'counter_increment',
                   onPressed: () {
                     ref.read(counterStateProvider.notifier).state++;
                   },
                   child: const Icon(Icons.add),
                 ),
+                const SizedBox(width: 16),
                 FloatingActionButton(
+                  heroTag: 'counter_decrement',
                   onPressed: () {
                     ref.read(counterStateProvider.notifier).state--;
                   },
