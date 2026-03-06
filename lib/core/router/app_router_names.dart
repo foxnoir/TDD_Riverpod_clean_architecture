@@ -10,9 +10,11 @@ class AppRouteNames {
   /// Nested under start: full path /start_screen/state_provider_screen
   static const String stateProviderScreenPath = 'state_provider_screen';
   static const String notifierProviderScreenPath = 'notifier_provider_screen';
+  static const String asyncProviderScreenPath = 'async_provider_screen';
 
   /// State provider screen: name for context.goNamed('stateProviderScreen')
   static const String startScreen = 'startScreen';
   static const String stateProviderScreen = 'stateProviderScreen';
   static const String notifierProviderScreen = 'notifierProviderScreen';
+  static const String asyncProviderScreen = 'asyncProviderScreen';
 }
