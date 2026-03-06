@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tdd_riverpod_clean_architecture/core/router/app_router_names.dart';
-import 'package:tdd_riverpod_clean_architecture/features/persistent_async_provider/counter_async_provider.dart';
+import 'package:tdd_riverpod_clean_architecture/features/persistent_async_provider/counter_persistent_async_provider.dart';
 import 'package:tdd_riverpod_clean_architecture/features/notifier_provider/counter_notifier_provider.dart';
 import 'package:tdd_riverpod_clean_architecture/features/start_screen/start_screen_provider.dart';
 import 'package:tdd_riverpod_clean_architecture/features/state_provider/counter_state_provider.dart';
@@ -24,9 +24,10 @@ class _StartScreenState extends ConsumerState<StartScreen> {
     ref
       ..invalidate(counterStateProvider)
       ..invalidate(counterNotifierProvider)
-      ..invalidate(counterAsyncProvider);
-    _useAsyncValue<int>(ref.refresh(counterAsyncProvider));
-    ref.read(asyncProviderRefreshRequestedProvider.notifier).state = true;
+      ..invalidate(counterPersistentAsyncProvide);
+    _useAsyncValue<int>(ref.refresh(counterPersistentAsyncProvide));
+    ref.read(persistentAsyncProvideRefreshRequestedProvider.notifier).state =
+        true;
 
     await Future<void>.delayed(const Duration(milliseconds: 600));
     if (!mounted) return;
@@ -82,11 +83,11 @@ class _StartScreenState extends ConsumerState<StartScreen> {
                     const SizedBox(height: 16),
                     _menuButton(
                       height: buttonHeight,
-                      label: 'Async Provider',
+                      label: 'Persistent Async Provider',
                       onPressed: isResetting
                           ? null
                           : () => context.pushNamed(
-                              AppRouteNames.asyncProviderScreen,
+                              AppRouteNames.persistentAsyncProvideScreen,
                             ),
                     ),
                     const SizedBox(height: 16),

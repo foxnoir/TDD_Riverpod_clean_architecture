@@ -1,47 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tdd_riverpod_clean_architecture/features/persistent_async_provider/counter_async_provider.dart';
+import 'package:tdd_riverpod_clean_architecture/features/persistent_async_provider/counter_persistent_async_provider.dart';
 
-class AsyncProviderScreen extends ConsumerStatefulWidget {
-  const AsyncProviderScreen({super.key});
+class PersistentAsyncProvideScreen extends ConsumerStatefulWidget {
+  const PersistentAsyncProvideScreen({super.key});
 
   @override
-  ConsumerState<AsyncProviderScreen> createState() =>
-      _AsyncProviderScreenState();
+  ConsumerState<PersistentAsyncProvideScreen> createState() =>
+      _PersistentAsyncProvideScreenState();
 }
 
-class _AsyncProviderScreenState extends ConsumerState<AsyncProviderScreen> {
-  bool _waitForFreshLoad = true;
-  bool _hasSeenReloading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .refresh(counterAsyncProvider)
-          .when(loading: () => null, data: (_) => null, error: (_, __) => null);
-    });
-  }
-
+class _PersistentAsyncProvideScreenState
+    extends ConsumerState<PersistentAsyncProvideScreen> {
   @override
   Widget build(BuildContext context) {
-    final counterAsync = ref.watch(counterAsyncProvider);
+    final counterAsync = ref.watch(counterPersistentAsyncProvide);
+    final refreshRequested = ref.watch(
+      persistentAsyncProvideRefreshRequestedProvider,
+    );
 
-    if (counterAsync.isReloading || counterAsync.isLoading) {
-      _hasSeenReloading = true;
-    }
-    if (_waitForFreshLoad &&
-        _hasSeenReloading &&
-        counterAsync.hasValue &&
+    final stable =
+        (counterAsync.hasValue || counterAsync.hasError) &&
         !counterAsync.isReloading &&
-        !counterAsync.isLoading) {
+        !counterAsync.isLoading;
+    final showLoadingFromRefresh = refreshRequested && !stable;
+
+    if (refreshRequested && stable) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) setState(() => _waitForFreshLoad = false);
+        if (mounted) {
+          ref
+                  .read(persistentAsyncProvideRefreshRequestedProvider.notifier)
+                  .state =
+              false;
+        }
       });
     }
-
-    final showContent = !_waitForFreshLoad;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Async Provider Screen')),
@@ -51,8 +44,7 @@ class _AsyncProviderScreenState extends ConsumerState<AsyncProviderScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 16),
-
-            if (!showContent)
+            if (showLoadingFromRefresh)
               const Center(child: CircularProgressIndicator())
             else
               counterAsync.when(
@@ -64,35 +56,31 @@ class _AsyncProviderScreenState extends ConsumerState<AsyncProviderScreen> {
                     ? const Center(child: CircularProgressIndicator())
                     : Text('Error: $error'),
               ),
-
             const SizedBox(height: 8),
             const Spacer(),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 FloatingActionButton(
-                  heroTag: 'counter_decrement',
-                  onPressed: () {
-                    ref.read(counterAsyncProvider.notifier).decrement();
-                  },
+                  heroTag: 'async_decrement',
+                  onPressed: () => ref
+                      .read(counterPersistentAsyncProvide.notifier)
+                      .decrement(),
                   child: const Icon(Icons.remove),
                 ),
                 const SizedBox(width: 16),
-
                 FloatingActionButton(
-                  heroTag: 'counter_increment',
-                  onPressed: () {
-                    ref.read(counterAsyncProvider.notifier).increment();
-                  },
+                  heroTag: 'async_increment',
+                  onPressed: () => ref
+                      .read(counterPersistentAsyncProvide.notifier)
+                      .increment(),
                   child: const Icon(Icons.add),
                 ),
                 const SizedBox(width: 16),
                 FloatingActionButton(
-                  heroTag: 'counter_reset',
-                  onPressed: () {
-                    ref.read(counterAsyncProvider.notifier).reset();
-                  },
+                  heroTag: 'async_reset',
+                  onPressed: () =>
+                      ref.read(counterPersistentAsyncProvide.notifier).reset(),
                   child: const Icon(Icons.refresh),
                 ),
               ],
