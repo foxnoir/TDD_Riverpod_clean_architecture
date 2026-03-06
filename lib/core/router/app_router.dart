@@ -38,7 +38,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             path: AppRouteNames.nonPersistentAsyncProvideScreenPath,
             name: AppRouteNames.nonPersistentAsyncProvideScreen,
             builder: (context, state) =>
-                const NonPersistentAsyncProvideScreen(),
+                const NonPersistentAsyncProviderScreen(),
           ),
         ],
       ),
