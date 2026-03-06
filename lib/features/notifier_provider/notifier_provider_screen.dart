@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tdd_riverpod_clean_architecture/features/notifier_provider/counter_notifier_provider.dart';
-import 'package:tdd_riverpod_clean_architecture/features/state_provider/counter_state_provider.dart';
 
 class NotifierProviderScreen extends ConsumerStatefulWidget {
   const NotifierProviderScreen({super.key});
@@ -37,6 +36,15 @@ class _NotifierProviderScreenState
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 FloatingActionButton(
+                  heroTag: 'counter_decrement',
+                  onPressed: () {
+                    ref.read(counterNotifierProvider.notifier).decrement();
+                  },
+                  child: const Icon(Icons.remove),
+                ),
+                const SizedBox(width: 16),
+
+                FloatingActionButton(
                   heroTag: 'counter_increment',
                   onPressed: () {
                     ref.read(counterNotifierProvider.notifier).increment();
@@ -45,11 +53,11 @@ class _NotifierProviderScreenState
                 ),
                 const SizedBox(width: 16),
                 FloatingActionButton(
-                  heroTag: 'counter_decrement',
+                  heroTag: 'counter_resetå',
                   onPressed: () {
-                    ref.read(counterNotifierProvider.notifier).decrement();
+                    ref.read(counterNotifierProvider.notifier).reset();
                   },
-                  child: const Icon(Icons.remove),
+                  child: const Icon(Icons.refresh),
                 ),
               ],
             ),

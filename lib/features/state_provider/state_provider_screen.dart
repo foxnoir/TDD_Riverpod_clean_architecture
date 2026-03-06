@@ -35,19 +35,20 @@ class _StateProviderScreenState extends ConsumerState<StateProviderScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 FloatingActionButton(
-                  heroTag: 'counter_increment',
-                  onPressed: () {
-                    ref.read(counterStateProvider.notifier).state++;
-                  },
-                  child: const Icon(Icons.add),
-                ),
-                const SizedBox(width: 16),
-                FloatingActionButton(
                   heroTag: 'counter_decrement',
                   onPressed: () {
                     ref.read(counterStateProvider.notifier).state--;
                   },
                   child: const Icon(Icons.remove),
+                ),
+                const SizedBox(width: 16),
+
+                FloatingActionButton(
+                  heroTag: 'counter_increment',
+                  onPressed: () {
+                    ref.read(counterStateProvider.notifier).state++;
+                  },
+                  child: const Icon(Icons.add),
                 ),
               ],
             ),
