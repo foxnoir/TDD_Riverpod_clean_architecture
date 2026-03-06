@@ -18,7 +18,11 @@ class StartScreen extends StatelessWidget {
               child: const Text('State Provider'),
             ),
             const SizedBox(height: 16),
-            FilledButton(onPressed: () {}, child: const Text('Placeholder 1')),
+            FilledButton(
+              onPressed: () =>
+                  context.pushNamed(AppRouteNames.notifierProviderScreen),
+              child: const Text('Notifier Provider'),
+            ),
             const SizedBox(height: 16),
             FilledButton(onPressed: () {}, child: const Text('Placeholder 2')),
             const SizedBox(height: 16),

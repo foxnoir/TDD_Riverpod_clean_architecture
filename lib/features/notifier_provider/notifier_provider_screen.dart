@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tdd_riverpod_clean_architecture/features/notifier_provider/counter_notifier_provider.dart';
 import 'package:tdd_riverpod_clean_architecture/features/state_provider/counter_state_provider.dart';
 
-class StateProviderScreen extends ConsumerStatefulWidget {
-  const StateProviderScreen({super.key});
+class NotifierProviderScreen extends ConsumerStatefulWidget {
+  const NotifierProviderScreen({super.key});
 
   @override
-  ConsumerState<StateProviderScreen> createState() =>
-      _StateProviderScreenState();
+  ConsumerState<NotifierProviderScreen> createState() =>
+      _NotifierProviderScreenState();
 }
 
-class _StateProviderScreenState extends ConsumerState<StateProviderScreen> {
+class _NotifierProviderScreenState
+    extends ConsumerState<NotifierProviderScreen> {
   @override
   Widget build(BuildContext context) {
     // only use in build method
-    final counter = ref.watch(counterStateProvider);
+    final counter = ref.watch(counterNotifierProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('State Provider Screen')),
+      appBar: AppBar(title: const Text('Notifier Provider Screen')),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
         child: Column(
@@ -37,7 +39,7 @@ class _StateProviderScreenState extends ConsumerState<StateProviderScreen> {
                 FloatingActionButton(
                   heroTag: 'counter_increment',
                   onPressed: () {
-                    ref.read(counterStateProvider.notifier).state++;
+                    ref.read(counterNotifierProvider.notifier).increment();
                   },
                   child: const Icon(Icons.add),
                 ),
@@ -45,7 +47,7 @@ class _StateProviderScreenState extends ConsumerState<StateProviderScreen> {
                 FloatingActionButton(
                   heroTag: 'counter_decrement',
                   onPressed: () {
-                    ref.read(counterStateProvider.notifier).state--;
+                    ref.read(counterNotifierProvider.notifier).decrement();
                   },
                   child: const Icon(Icons.remove),
                 ),
