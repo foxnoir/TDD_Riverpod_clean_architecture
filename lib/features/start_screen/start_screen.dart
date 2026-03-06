@@ -24,8 +24,8 @@ class _StartScreenState extends ConsumerState<StartScreen> {
     ref
       ..invalidate(counterStateProvider)
       ..invalidate(counterNotifierProvider)
-      ..invalidate(counterPersistentAsyncProvide);
-    _useAsyncValue<int>(ref.refresh(counterPersistentAsyncProvide));
+      ..invalidate(counterPersistentAsyncProvider);
+    _useAsyncValue<int>(ref.refresh(counterPersistentAsyncProvider));
     ref.read(persistentAsyncProvideRefreshRequestedProvider.notifier).state =
         true;
 

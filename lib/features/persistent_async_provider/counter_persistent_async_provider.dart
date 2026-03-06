@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/legacy.dart';
 
 final _random = Random();
 
-final counterPersistentAsyncProvide =
+final counterPersistentAsyncProvider =
     AsyncNotifierProvider<CounterAsyncNotifier, int>(CounterAsyncNotifier.new);
 
 /// Set to true when "Refresh app" was triggered; async screen shows loading until reload is done.
