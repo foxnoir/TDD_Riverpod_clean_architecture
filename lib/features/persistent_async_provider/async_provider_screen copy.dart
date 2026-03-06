@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tdd_riverpod_clean_architecture/features/async_provider/counter_async_provider.dart';
+import 'package:tdd_riverpod_clean_architecture/features/persistent_async_provider/counter_async_provider.dart';
 
 class AsyncProviderScreen extends ConsumerStatefulWidget {
   const AsyncProviderScreen({super.key});
@@ -11,10 +11,37 @@ class AsyncProviderScreen extends ConsumerStatefulWidget {
 }
 
 class _AsyncProviderScreenState extends ConsumerState<AsyncProviderScreen> {
+  bool _waitForFreshLoad = true;
+  bool _hasSeenReloading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .refresh(counterAsyncProvider)
+          .when(loading: () => null, data: (_) => null, error: (_, __) => null);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    // only use in build method
     final counterAsync = ref.watch(counterAsyncProvider);
+
+    if (counterAsync.isReloading || counterAsync.isLoading) {
+      _hasSeenReloading = true;
+    }
+    if (_waitForFreshLoad &&
+        _hasSeenReloading &&
+        counterAsync.hasValue &&
+        !counterAsync.isReloading &&
+        !counterAsync.isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() => _waitForFreshLoad = false);
+      });
+    }
+
+    final showContent = !_waitForFreshLoad;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Async Provider Screen')),
@@ -25,17 +52,18 @@ class _AsyncProviderScreenState extends ConsumerState<AsyncProviderScreen> {
           children: [
             const SizedBox(height: 16),
 
-            counterAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              data: (data) => counterAsync.isReloading
-                  ? const Center(child: CircularProgressIndicator())
-                  : Text(
-                      'You have pushed the button this many times: $data',
-                    ),
-              error: (error, stack) => counterAsync.isReloading
-                  ? const Center(child: CircularProgressIndicator())
-                  : Text('Error: $error'),
-            ),
+            if (!showContent)
+              const Center(child: CircularProgressIndicator())
+            else
+              counterAsync.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                data: (data) => counterAsync.isReloading
+                    ? const Center(child: CircularProgressIndicator())
+                    : Text('You have pushed the button this many times: $data'),
+                error: (error, stack) => counterAsync.isReloading
+                    ? const Center(child: CircularProgressIndicator())
+                    : Text('Error: $error'),
+              ),
 
             const SizedBox(height: 8),
             const Spacer(),

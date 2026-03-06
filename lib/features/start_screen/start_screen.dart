@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tdd_riverpod_clean_architecture/core/router/app_router_names.dart';
-import 'package:tdd_riverpod_clean_architecture/features/async_provider/counter_async_provider.dart';
+import 'package:tdd_riverpod_clean_architecture/features/persistent_async_provider/counter_async_provider.dart';
 import 'package:tdd_riverpod_clean_architecture/features/notifier_provider/counter_notifier_provider.dart';
 import 'package:tdd_riverpod_clean_architecture/features/start_screen/start_screen_provider.dart';
 import 'package:tdd_riverpod_clean_architecture/features/state_provider/counter_state_provider.dart';
@@ -15,28 +15,38 @@ class StartScreen extends ConsumerStatefulWidget {
 }
 
 class _StartScreenState extends ConsumerState<StartScreen> {
-  Future<void> _refreshApp({required bool isResetting}) async {
-    if (isResetting) return;
-    setState(() => ref.read(startScreenProvider.notifier).state = true);
+  Future<void> _refreshApp() async {
+    final notifier = ref.read(startScreenProvider.notifier);
+    if (notifier.state) return;
+
+    notifier.state = true;
 
     ref
       ..invalidate(counterStateProvider)
       ..invalidate(counterNotifierProvider)
-      ..invalidate(counterAsyncProvider)
-      ..refresh(
-        counterAsyncProvider,
-      ).when(loading: () => null, data: (_) => null, error: (_, __) => null);
+      ..invalidate(counterAsyncProvider);
+    _useAsyncValue<int>(ref.refresh(counterAsyncProvider));
+    ref.read(asyncProviderRefreshRequestedProvider.notifier).state = true;
 
     await Future<void>.delayed(const Duration(milliseconds: 600));
     if (!mounted) return;
     context.go(AppRouteNames.startScreenPath);
-    setState(() => ref.read(startScreenProvider.notifier).state = false);
+    notifier.state = false;
+  }
+
+  static void _useAsyncValue<T>(Object value) {
+    if (value is AsyncValue<T>) {
+      value.when(
+        loading: () => null,
+        data: (_) => null,
+        error: (_, __) => null,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     const buttonHeight = 48.0;
-    // only use in build method
     final isResetting = ref.watch(startScreenProvider);
 
     return Stack(
@@ -50,70 +60,53 @@ class _StartScreenState extends ConsumerState<StartScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(
-                      width: double.infinity,
+                    _menuButton(
                       height: buttonHeight,
-                      child: FilledButton(
-                        onPressed: isResetting
-                            ? null
-                            : () => context.pushNamed(
-                                AppRouteNames.stateProviderScreen,
-                              ),
-                        child: const Text('State Provider'),
-                      ),
+                      label: 'State Provider',
+                      onPressed: isResetting
+                          ? null
+                          : () => context.pushNamed(
+                              AppRouteNames.stateProviderScreen,
+                            ),
                     ),
                     const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
+                    _menuButton(
                       height: buttonHeight,
-                      child: FilledButton(
-                        onPressed: isResetting
-                            ? null
-                            : () => context.pushNamed(
-                                AppRouteNames.notifierProviderScreen,
-                              ),
-                        child: const Text('Notifier Provider'),
-                      ),
+                      label: 'Notifier Provider',
+                      onPressed: isResetting
+                          ? null
+                          : () => context.pushNamed(
+                              AppRouteNames.notifierProviderScreen,
+                            ),
                     ),
                     const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
+                    _menuButton(
                       height: buttonHeight,
-                      child: FilledButton(
-                        onPressed: isResetting
-                            ? null
-                            : () => context.pushNamed(
-                                AppRouteNames.asyncProviderScreen,
-                              ),
-                        child: const Text('Async Provider'),
-                      ),
+                      label: 'Async Provider',
+                      onPressed: isResetting
+                          ? null
+                          : () => context.pushNamed(
+                              AppRouteNames.asyncProviderScreen,
+                            ),
                     ),
                     const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
+                    _menuButton(
                       height: buttonHeight,
-                      child: FilledButton(
-                        onPressed: isResetting ? null : () {},
-                        child: const Text('Placeholder 2'),
-                      ),
+                      label: 'Placeholder 2',
+                      onPressed: isResetting ? null : () {},
                     ),
                     const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
+                    _menuButton(
                       height: buttonHeight,
-                      child: FilledButton(
-                        onPressed: isResetting ? null : () {},
-                        child: const Text('Placeholder 3'),
-                      ),
+                      label: 'Placeholder 3',
+                      onPressed: isResetting ? null : () {},
                     ),
                     const SizedBox(height: 24),
                     SizedBox(
                       width: double.infinity,
                       height: buttonHeight,
                       child: OutlinedButton.icon(
-                        onPressed: isResetting
-                            ? null
-                            : () => _refreshApp(isResetting: isResetting),
+                        onPressed: isResetting ? null : _refreshApp,
                         icon: const Icon(Icons.refresh, size: 20),
                         label: const Text('Refresh app'),
                       ),
@@ -130,6 +123,18 @@ class _StartScreenState extends ConsumerState<StartScreen> {
             child: Center(child: CircularProgressIndicator()),
           ),
       ],
+    );
+  }
+
+  Widget _menuButton({
+    required double height,
+    required String label,
+    required VoidCallback? onPressed,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      height: height,
+      child: FilledButton(onPressed: onPressed, child: Text(label)),
     );
   }
 }

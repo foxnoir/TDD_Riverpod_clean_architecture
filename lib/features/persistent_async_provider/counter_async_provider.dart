@@ -2,12 +2,16 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 final _random = Random();
 
 final counterAsyncProvider = AsyncNotifierProvider<CounterAsyncNotifier, int>(
   CounterAsyncNotifier.new,
 );
+
+/// Set to true when "Refresh app" was triggered; async screen shows loading until reload is done.
+final asyncProviderRefreshRequestedProvider = StateProvider<bool>((ref) => false);
 
 class CounterAsyncNotifier extends AsyncNotifier<int> {
   @override
