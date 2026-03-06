@@ -14,7 +14,7 @@ class _PersistentAsyncProvideScreenState
     extends ConsumerState<PersistentAsyncProvideScreen> {
   @override
   Widget build(BuildContext context) {
-    final counterAsync = ref.watch(counterPersistentAsyncProvide);
+    final counterAsync = ref.watch(counterPersistentAsyncProvider);
     final refreshRequested = ref.watch(
       persistentAsyncProvideRefreshRequestedProvider,
     );
@@ -37,7 +37,7 @@ class _PersistentAsyncProvideScreenState
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Async Provider Screen')),
+      appBar: AppBar(title: const Text('Persistent Async Provider Screen')),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
         child: Column(
@@ -64,7 +64,7 @@ class _PersistentAsyncProvideScreenState
                 FloatingActionButton(
                   heroTag: 'async_decrement',
                   onPressed: () => ref
-                      .read(counterPersistentAsyncProvide.notifier)
+                      .read(counterPersistentAsyncProvider.notifier)
                       .decrement(),
                   child: const Icon(Icons.remove),
                 ),
@@ -72,7 +72,7 @@ class _PersistentAsyncProvideScreenState
                 FloatingActionButton(
                   heroTag: 'async_increment',
                   onPressed: () => ref
-                      .read(counterPersistentAsyncProvide.notifier)
+                      .read(counterPersistentAsyncProvider.notifier)
                       .increment(),
                   child: const Icon(Icons.add),
                 ),
@@ -80,7 +80,7 @@ class _PersistentAsyncProvideScreenState
                 FloatingActionButton(
                   heroTag: 'async_reset',
                   onPressed: () =>
-                      ref.read(counterPersistentAsyncProvide.notifier).reset(),
+                      ref.read(counterPersistentAsyncProvider.notifier).reset(),
                   child: const Icon(Icons.refresh),
                 ),
               ],

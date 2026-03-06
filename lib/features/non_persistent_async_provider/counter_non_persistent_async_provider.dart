@@ -6,13 +6,13 @@ import 'package:flutter_riverpod/legacy.dart';
 
 final _random = Random();
 
-final counterPersistentAsyncProvide =
+final counterNonPersistentAsyncProvidr =
     AsyncNotifierProvider<CounterAsyncNotifier, int>(CounterAsyncNotifier.new);
 
-/// Set to true when "Refresh app" was triggered; async screen shows loading until reload is done.
-final persistentAsyncProvideRefreshRequestedProvider = StateProvider<bool>(
-  (ref) => false,
-);
+/// Set to true when "Refresh app" was triggered; async screen shows
+/// loading until reload is done.
+final persistentNonPersistentAsyncProvideRefreshRequestedProvider =
+    StateProvider<bool>((ref) => false);
 
 class CounterAsyncNotifier extends AsyncNotifier<int> {
   @override

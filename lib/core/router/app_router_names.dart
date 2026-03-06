@@ -12,6 +12,8 @@ class AppRouteNames {
   static const String notifierProviderScreenPath = 'notifier_provider_screen';
   static const String persistentAsyncProvideScreenPath =
       'async_provider_screen';
+  static const String nonPersistentAsyncProvideScreenPath =
+      'non_persistent_async_provider_screen';
 
   /// State provider screen: name for context.goNamed('stateProviderScreen')
   static const String startScreen = 'startScreen';
@@ -19,4 +21,6 @@ class AppRouteNames {
   static const String notifierProviderScreen = 'notifierProviderScreen';
   static const String persistentAsyncProvideScreen =
       'persistentAsyncProvideScreen';
+  static const String nonPersistentAsyncProvideScreen =
+      'nonPersistentAsyncProvideScreen';
 }

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tdd_riverpod_clean_architecture/features/persistent_async_provider/counter_persistent_async_provider.dart';
+import 'package:tdd_riverpod_clean_architecture/features/non_persistent_async_provider/counter_non_persistent_async_provider.dart';
 
-class PersistentAsyncProvideScreen extends ConsumerStatefulWidget {
-  const PersistentAsyncProvideScreen({super.key});
+class NonPersistentAsyncProvideScreen extends ConsumerStatefulWidget {
+  const NonPersistentAsyncProvideScreen({super.key});
 
   @override
-  ConsumerState<PersistentAsyncProvideScreen> createState() =>
-      _PersistentAsyncProvideScreenState();
+  ConsumerState<NonPersistentAsyncProvideScreen> createState() =>
+      _NonPersistentAsyncProvideScreenState();
 }
 
-class _PersistentAsyncProvideScreenState
-    extends ConsumerState<PersistentAsyncProvideScreen> {
+class _NonPersistentAsyncProvideScreenState
+    extends ConsumerState<NonPersistentAsyncProvideScreen> {
   bool _waitForFreshLoad = true;
   bool _hasSeenReloading = false;
 
@@ -20,14 +20,14 @@ class _PersistentAsyncProvideScreenState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
-          .refresh(counterPersistentAsyncProvide)
+          .refresh(counterNonPersistentAsyncProvidr)
           .when(loading: () => null, data: (_) => null, error: (_, __) => null);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final counterAsync = ref.watch(counterPersistentAsyncProvide);
+    final counterAsync = ref.watch(counterNonPersistentAsyncProvidr);
 
     if (counterAsync.isReloading || counterAsync.isLoading) {
       _hasSeenReloading = true;
@@ -45,7 +45,7 @@ class _PersistentAsyncProvideScreenState
     final showContent = !_waitForFreshLoad;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Async Provider Screen')),
+      appBar: AppBar(title: const Text('Non Persistent Async Provider Screen')),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
         child: Column(
@@ -76,7 +76,7 @@ class _PersistentAsyncProvideScreenState
                   heroTag: 'counter_decrement',
                   onPressed: () {
                     ref
-                        .read(counterPersistentAsyncProvide.notifier)
+                        .read(counterNonPersistentAsyncProvidr.notifier)
                         .decrement();
                   },
                   child: const Icon(Icons.remove),
@@ -87,7 +87,7 @@ class _PersistentAsyncProvideScreenState
                   heroTag: 'counter_increment',
                   onPressed: () {
                     ref
-                        .read(counterPersistentAsyncProvide.notifier)
+                        .read(counterNonPersistentAsyncProvidr.notifier)
                         .increment();
                   },
                   child: const Icon(Icons.add),
@@ -96,7 +96,7 @@ class _PersistentAsyncProvideScreenState
                 FloatingActionButton(
                   heroTag: 'counter_reset',
                   onPressed: () {
-                    ref.read(counterPersistentAsyncProvide.notifier).reset();
+                    ref.read(counterNonPersistentAsyncProvidr.notifier).reset();
                   },
                   child: const Icon(Icons.refresh),
                 ),
